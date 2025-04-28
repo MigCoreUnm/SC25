@@ -1,5 +1,33 @@
-This is the ARCs github
+# ARCS (Agentic RAG Code Synthesis)
 
-To run the code. clone the github install the requirements. 
-Once that is done we have three systems one used for the lanl corpus, human eval, and transcoder data. 
-You can connect the LANl System to any db that you haev through vector searching through the vector searching tool and it will perform arcs for your query
+ARCS is an agentic chain-of-thought system for retrieval-augmented code generation. It supports three evaluation pipelines:
+
+- HumanEval (pass@1 on HumanEval benchmarks)
+- TransCoder (translation accuracy)
+- LANL CodeBLEU (CodeBLEU on a domain-specific LANL corpus, connectable to any vector-searchable database)
+
+## Prerequisites
+
+- Python 3.8 or 3.9  
+- A virtual environment tool (venv or conda)  
+- SambaNova API key 
+- ChromaDB or another vector-store instance (for the LANL pipeline)
+
+## Installation
+
+```bash
+# clone repository
+git clone https://github.com/MigCoreUnm/SC25.git
+cd SC25
+
+# create and activate main environment
+python3 -m venv venv
+source venv/bin/activate
+
+# install dependencies
+pip install -r requirements.txt
+
+# optional: create a secondary temporary environment
+python3 -m venv temp_env_1
+source temp_env1/bin/activate
+pip install -r requirements.txt
