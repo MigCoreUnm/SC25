@@ -1,0 +1,121 @@
+import os
+import json
+from AgenticFramework.AgenticSystem import Node
+from SC25code.full_systemHE import full_system
+import sys 
+sys.path.insert(0, "/vast/home/miguelcord/agenticSystemPaper")
+languages =["python", "cpp","javs"]
+files = {
+    "python": "/vast/home/miguelcord/agenticSystemPaper/python_tests.json",
+    "cpp": "/vast/home/miguelcord/agenticSystemPaper/cpp_tests.json",
+    "java": "/vast/home/miguelcord/agenticSystemPaper/java_tests.json"
+}
+models = [
+    "DeepSeek-R1"
+]
+
+output_dir = "outputs"
+os.makedirs(output_dir, exist_ok=True)
+
+def load_missing_tests(filename="missing_tests.txt"):
+    """
+    Reads a list of test/function names from the specified file.
+    Each line should contain one test name.
+    Returns a set of names for fast membership checking.
+    """
+    try:
+        with open(filename, 'r') as file:
+            # Using a set here for O(1) average lookups
+            missing_tests = {line.strip() for line in file if line.strip()}
+        return missing_tests
+    except FileNotFoundError:
+        print(f"Error: {filename} not found.")
+        return ""
+
+
+
+def load_tests(filename):
+    with open(filename, 'r') as f:
+        return json.load(f)
+
+def save_incremental(base_lang, target_lang, model, system_size, records):
+    file_name = f"{base_lang}_to_{target_lang}_{model}_{system_size}_2.json"
+    out_path = os.path.join(output_dir, file_name)
+    with open(out_path, 'w') as f:
+        json.dump(records, f, indent=2)
+
+
+
+
+for model in models:
+    print(f"\nRunning translations with model: {model}")
+
+    for base_lang in languages:
+        print(f"  Base language: {base_lang}")
+        test_data = load_tests(files[base_lang])
+
+        for target_lang in languages:
+            if target_lang == base_lang:
+                continue
+
+            print(f"    Translating to: {target_lang}")
+            missing_tests = load_missing_tests()
+
+
+            # Store translations for all 3 system sizes
+            small_records = []
+            medium_records = []
+            large_records = []
+
+            for test in test_data:
+                if test.get("function_id", "unknown_function") in missing_tests:
+                    continue
+                function_id = test.get("function_id", "unknown_function")
+                function_signature = test.get("function_signature", "")
+                function_code = test.get("function_code", "")
+                full_code = f"{function_signature} {function_code}"
+
+                record_base = {
+                    "function_id": function_id,
+                    "original_language": base_lang,
+                    "function_signature": function_signature,
+                    "function_code": function_code,
+                }
+
+                prompt = (
+                    f"Your role is to translate the following function from {base_lang} to {target_lang}:\n\n"
+                    f"{full_code}\n\n"
+                    "\n Do not include any extra commentary, error statements, or unit tests.  simply translate the code. \n"
+                )
+                prompt2 = prompt + "Do not provide any additional commentary. Return only the translated code."
+
+                # Small system (Node)
+                try:
+                    small_system = Node(instructions=prompt2, cot='', model=model)
+                    result_small = small_system.generate("").content
+                    print(result_small)
+                    small_records.append({**record_base, "translated_code": result_small})
+                except Exception as e:
+                    small_records.append({**record_base, "translated_code": f"ERROR: {str(e)}"})
+
+                # Medium and Large systems (from full_system)
+                try:
+                    medium_system, large_system, regens, time = full_system(prompt, model=model)
+
+                    medium_records.append({**record_base, "translated_code": medium_system})
+                    print(medium_records)
+                    large_records.append({**record_base, "translated_code": large_system,"regens" :regens,"time":time})
+                    print(large_records)
+
+                except Exception as e:
+                    err_msg = f"ERROR: {str(e)}"
+                    medium_records.append({**record_base, "translated_code": err_msg})
+                    large_records.append({**record_base, "translated_code": err_msg})
+                
+
+            # Save outputs per target
+            save_incremental(base_lang, target_lang, model, "small", small_records)
+            save_incremental(base_lang, target_lang, model, "medium", medium_records)
+            save_incremental(base_lang, target_lang, model, "large", large_records)
+
+            print(f"      Saved: {base_lang}_to_{target_lang}_{model}_*.json")

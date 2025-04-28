@@ -1,0 +1,68 @@
+llm: 
+  "api": "sncloud" #  set either sambastudio or sncloud
+  "do_sample": False
+  "temperature": 0.01
+  "max_tokens": 2048
+  "model": "Meta-Llama-3.3-70B-Instruct"
+
+tools:
+    query_db:
+      llm: 
+        "api": "sncloud" #  set either sambastudio or sncloud
+        "do_sample": False
+        "temperature": 0.01 
+        "max_tokens": 2048
+        "model": "Meta-Llama-3.1-405B-Instruct" 
+      db:
+        "path": "data/chinook.db" 
+
+    translate:
+      llm: 
+        "api": "sncloud" #  set either sambastudio or sncloud
+        "do_sample": False
+        "temperature": 0.0
+        "max_tokens": 2048
+        "model": "Meta-Llama-3.1-405B-Instruct" 
+
+    rag:
+      llm:
+        "api": "sncloud" #  set either sambastudio or sncloud
+        "do_sample": False
+        "temperature": 0.0 
+        "max_tokens": 2048
+        "model": "Meta-Llama-3.1-405B-Instruct"
+      embedding_model: 
+        "type": "cpu" # set either sambastudio or cpu
+        "batch_size": 1 #set depending of your endpoint configuration (1 if bundle embedding expert)
+        "bundle": True #set true if using Sambastudio embeddings in a bundle endpoint 
+        "select_expert": "e5-mistral-7b-instruct" #set if using SambaStudio bundle embedding expert
+      vector_db:
+        "path": "data/my-vector-db" # path to your previously created chroma vdb
+      retrieval:
+        "k_retrieved_documents": 3
+        "score_treshold": 0.3
+
+prod_mode: False
+
+# set which tools to show in the streamlit app setup bar
+# enabled will make the tools available in the tool selector
+# default will set the tool as preselected in the tool selector 
+st_tools: 
+  "get_time":
+    "enabled": True
+    "default": True
+  "query_db":
+    "enabled": True
+    "default": True
+  "python_repl":
+    "enabled": True
+    "default": True
+  "calculator":
+    "enabled": True
+    "default": False
+  "translate":
+    "enabled": True
+    "default": False
+  "rag":
+    "enabled": True
+    "default": False
