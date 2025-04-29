@@ -2,10 +2,10 @@ from AgenticFramework.AgenticSystem import AgenticSystem, Node
 
 from dotenv import load_dotenv
 from langchain.schema import AIMessage
-from prompts import Prompts
-import prompts2 
+from prompts.prompts import Prompts
+from  prompts import prompts2 
 
-from agenticSystemPaper.AgenticFramework.d_systems.utility import utility_functions
+from AgenticFramework.d_systems.utility import utility_functions
 load_dotenv()
 prompt = prompts2.Prompts()
 prompts = Prompts()

@@ -3,7 +3,7 @@ from langchain.schema import AIMessage
 from AgenticFramework.AgenticSystem import Node
 from dbConnector import chromadbConnector
 
-from prompts import Prompts
+from prompts.prompts import Prompts
 prompt = Prompts()
 class utility_functions():
     vectors = 0

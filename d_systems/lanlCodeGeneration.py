@@ -5,9 +5,9 @@ from dotenv import load_dotenv
 from langchain.schema import AIMessage
 
 # Your custom modules
-from agenticSystemPaper.prompts.ARCprompts import Prompts
+from prompts.ARCprompts import Prompts
 from dbConnector import chromadbConnector
-from agenticSystemPaper.AgenticFramework.d_systems.utility import utility_functions
+from AgenticFramework.d_systems.utility import utility_functions
 
 load_dotenv()
 extract_code = """

@@ -1,8 +1,8 @@
 from AgenticFramework.AgenticSystem import AgenticSystem, Node
 from dotenv import load_dotenv
 from langchain.schema import AIMessage
-from agenticSystemPaper.prompts.ARCprompts import Prompts
-from agenticSystemPaper.AgenticFramework.d_systems.utility import utility_functions
+from prompts.ARCprompts import Prompts
+from AgenticFramework.d_systems.utility import utility_functions
 import os 
 from dbConnector import chromadbConnector
 
@@ -89,7 +89,7 @@ def retrieve_file(file_info: str):
 
 
 
-def breakdown_system(question, model="Meta-Llama-3.1-70B-Instruct", temperature=0.1,collection="pyDRESCALk"):
+def breakdown_system_lanl(question, model="Meta-Llama-3.1-70B-Instruct", temperature=0.1,collection="pyDRESCALk"):
     system = AgenticSystem()
     system.add_to_memory("parsed_outputs")
 

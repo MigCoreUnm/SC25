@@ -7,7 +7,7 @@ import pandas as pd
 sys.path.append("/vast/home/miguelcord/agenticSystemPaper")
 from AgenticFramework.AgenticSystem import Node, AgenticSystem
 from dbConnector import chromadbConnector
-from SC25code.fullSystemlanl import full_system
+from fullSystemlanl import full_system
 
 generating_code_instruction = """
 ---YOUR ROLE---

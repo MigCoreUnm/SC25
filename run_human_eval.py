@@ -4,10 +4,12 @@ import pandas as pd
 import time
 
 # Ensure proper module imports
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+HERE = os.path.dirname(__file__) 
+DSYS = os.path.join(HERE, "d_systems")
+sys.path.insert(0, DSYS)
 from full_systemHE import full_system
 from prompts.prompts2 import Prompts
-from d_systems.AgenticFramework.AgenticSystem import Node
+from AgenticFramework.AgenticSystem import Node
 
 # Initialize prompt system
 prom = Prompts()
@@ -18,7 +20,7 @@ def system_small(prompt):
     response = node.generate(prompt)
     return response.content
 
-def process_data(input_file, checkpoint_prefix="results_checkpoint_final_70b1", final_output="results_70b1.jsonl", max_retries=20, retry_delay=1):
+def process_data(input_file, checkpoint_prefix="results_checkpoint_final_70b3", final_output="results_70b3.jsonl", max_retries=20, retry_delay=1):
     """
     Process dataset and integrate full system call with retries and checkpointing.
 
@@ -36,7 +38,7 @@ def process_data(input_file, checkpoint_prefix="results_checkpoint_final_70b1", 
         while attempt < max_retries:
             try:
                 # Generate responses
-                medium, full = full_system(row["prompt"])
+                medium, full, _, _ = full_system(row["prompt"])
                 small = system_small(row["prompt"])
                 
                 # Store results

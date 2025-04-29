@@ -197,54 +197,64 @@ def conda_env_exists(env_name):
 @tool
 def run_py(py_code: str) -> str:
     """
-    Execute Python code in a secure, isolated temporary Conda environment.
+    Execute Python code in a secure, isolated temporary environment.
 
     ---
     **Parameters:**
-    - `py_code` (str): The Python code to be executed. Assure to capture all the code that is needed for this program to be run
+    - `py_code` (str): The Python code to be executed.
 
-      
-      
     ### **Returns:**
     - A string containing either:
       - The standard output of the executed Python code.
       - An error message if execution fails.
-
-
     """
 
     import tempfile, subprocess, os
 
-    # Step 1: Create a unique conda environment name.
     env_name = "temp_env_1"
+    tmp_file = None
 
-    print(f"{py_code}")
-
+    # Helper to execute a command list, capture output, and return (success, output)
+    def _run(cmd):
+        try:
+            proc = subprocess.run(cmd, capture_output=True, text=True, timeout=60)
+            out = proc.stdout + proc.stderr
+            return proc.returncode == 0, out
+        except Exception as e:
+            return False, str(e)
 
     try:
-        # --- Prepend sys.path modification code ---
+        # Write code to temp file
+        with tempfile.NamedTemporaryFile(delete=False, mode='w', suffix='.py', prefix='runpy_') as f:
+            f.write(py_code)
+            tmp_file = f.name
 
-        # Prepend the sys.path modification code to the provided user code.
-        full_code =  py_code
+        # 1) Try with conda
+        conda_cmd = ["conda", "run", "-n", env_name, "python", tmp_file]
+        ok, output = _run(conda_cmd)
+        if ok:
+            return output
 
-        # Step 3: Write the modified code to a temporary file and execute it.
-        tmp_file = None
-        try:
-            with tempfile.NamedTemporaryFile(delete=False, mode='w', suffix='.py', prefix='test_') as f:
-                f.write(full_code)
-                tmp_file = f.name
+        # If conda exists but env missing or other error, fall back
+        fallback_msg = f"(conda run failed, falling back to python3)\n{output}"
 
-            cmd = ["conda", "run", "-n", env_name, "python", tmp_file]
-            run_process = subprocess.run(cmd, capture_output=True, text=True,timeout=60)
-            if run_process.returncode != 0:
-                return f"Execution failed:\n{run_process.stderr}"
+        # 2) Try plain python3
+        python_cmd = ["python3", tmp_file]
+        ok_py, output_py = _run(python_cmd)
+        if ok_py:
+            return fallback_msg + "\n" + output_py
 
-            return "Ran the output was : "+run_process.stdout + run_process.stderr
-        finally:
-            if tmp_file and os.path.exists(tmp_file):
-                os.unlink(tmp_file)
-    except Exception as e:
-        return f"Unexpected error: {str(e)}"
+        # Both failed
+        return (
+            "Execution failed with both conda and python3.\n\n"
+            f"=== conda output ===\n{output}\n\n"
+            f"=== python3 output ===\n{output_py}"
+        )
+
+    finally:
+        if tmp_file and os.path.exists(tmp_file):
+            os.unlink(tmp_file)
+
 
 
 ###############################

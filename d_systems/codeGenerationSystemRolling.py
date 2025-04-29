@@ -3,7 +3,7 @@ from dotenv import load_dotenv
 from langchain.schema import AIMessage
 from prompts.prompts import Prompts
 
-from agenticSystemPaper.AgenticFramework.d_systems.utility import utility_functions
+from AgenticFramework.d_systems.utility import utility_functions
 load_dotenv()
 prompts = Prompts()
 
@@ -19,7 +19,7 @@ combine_steps = prompts.get_combine_steps()
 generate_function_steps = prompts.get_plan_out_code_generation()
 utility = utility_functions()
 
-def generate_code(question, prompts, model="Meta-Llama-3.1-70B-Instruct", temperature=0.1):
+def generate_code_roll(question, prompts, model="Meta-Llama-3.1-70B-Instruct", temperature=0.1):
     system = AgenticSystem()
 
     # Create an initial Node (not used further but can be used for debugging)

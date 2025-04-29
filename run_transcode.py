@@ -1,8 +1,13 @@
 import os
 import json
-from d_systems.AgenticFramework.AgenticSystem import Node
-from full_systemTC import full_system
 import sys 
+
+HERE = os.path.dirname(__file__) 
+DSYS = os.path.join(HERE, "d_systems")
+sys.path.insert(0, DSYS)
+
+from AgenticFramework.AgenticSystem import Node
+from full_systemTC import full_system
 from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent
 languages =["python","cpp","java"]
@@ -13,7 +18,6 @@ files = {
 }
 models = [
     "Meta-Llama-3.1-405B-Instruct",
-    "Meta-Llama-3.1-70B-Instruct",
     "Meta-Llama-3.3-70B-Instruct"
 ]
 
@@ -21,20 +25,7 @@ output_dir = "outputs"
 
 os.makedirs(output_dir, exist_ok=True)
 
-def load_missing_tests(filename="missing_tests.txt"):
-    """
-    Reads a list of test/function names from the specified file.
-    Each line should contain one test name.
-    Returns a set of names for fast membership checking.
-    """
-    try:
-        with open(filename, 'r') as file:
-            # Using a set here for O(1) average lookups
-            missing_tests = {line.strip() for line in file if line.strip()}
-        return missing_tests
-    except FileNotFoundError:
-        print(f"Error: {filename} not found.")
-        return ""
+
 
 
 

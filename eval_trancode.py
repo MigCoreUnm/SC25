@@ -406,7 +406,6 @@ def main():
     systems = ["small","medium","large"]
     models = [
     "Meta-Llama-3.3-70B-Instruct",
-    "Meta-Llama-3.1-70B-Instruct",
     "Meta-Llama-3.1-405B-Instruct",
 ]
     languages = ["python","java","cpp"]
@@ -425,7 +424,8 @@ def main():
                         results[f"{language}_to_{language2}_{model}_{system}"] = result
                     
 
-
+    with open('TC_output.json', 'w', encoding='utf-8') as f:
+        json.dump(results, f, indent=2, ensure_ascii=False)    
     print(results)
 
 

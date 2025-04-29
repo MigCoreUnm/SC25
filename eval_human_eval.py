@@ -22,7 +22,7 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 # and install locally.
 class get_answer():
     def __init__(self):
-        self.df = pd.read_json("results_70b1.jsonl", lines=True)
+        self.df = pd.read_json("results_70b3.jsonl", lines=True)
     
     def get_response(self, system: str, id: str):
         # Filter to the row matching `id` and select the `system` column
@@ -52,6 +52,7 @@ class get_answer():
         or retrieval of model-generated code from your DataFrame or other source.
         """
         code = self.get_response(system, id)
+        print(code)
         clean_code = self.clean_code_wrapper(code)
         return  clean_code
 
@@ -59,7 +60,7 @@ class get_answer():
 
 def main():
     # 1) Read the HumanEval problems (requires `human-eval` to be installed).
-    from run_evals.human_eval.human_eval.data import write_jsonl, read_problems
+    from human_eval.human_eval.data import write_jsonl, read_problems
     
     problems = read_problems()  # Dictionary of {task_id: {...problem data...}}
     answer = get_answer()

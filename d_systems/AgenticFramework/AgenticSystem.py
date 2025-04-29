@@ -11,7 +11,7 @@ from AgenticFramework.sambaNovaCode.function_calling.src.function_calling import
 from langchain.schema import AIMessage
 
 load_dotenv()
-key = os.getenv("SAMBANOVA_API_KEY2")
+key = os.getenv("SAMBANOVA_API_KEY")
 
 ###############################################################################
 # Node classes
@@ -38,7 +38,7 @@ class Node:
         onPrem=False,
         outputs=[],
         path="/lustre/vescratch1/miguelcord/llms/llama321b/checkpoints",
-        model="Meta-Llama-3.1-70B-Instruct",
+        model="Meta-Llama-3.3-70B-Instruct",
         temperature=0.1
     ):
         """
@@ -442,7 +442,7 @@ class AgenticSystem:
         is_end_node=False,
         onPrem=False,
         outputs=None,
-        model="Meta-Llama-3.1-70B-Instruct",
+        model="Meta-Llama-3.3-70B-Instruct",
         temperature=0.1
     ):
         """

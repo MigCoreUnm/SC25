@@ -3,8 +3,8 @@ from dotenv import load_dotenv
 from AgenticFramework.sambaNovaCode.myTools import run_py, run_tests,run_c,run_java
 
 load_dotenv()
-from agenticSystemPaper.prompts.TC_prompts import Prompts
-from agenticSystemPaper.AgenticFramework.d_systems.utility import utility_functions
+from prompts.TC_prompts import Prompts
+from AgenticFramework.d_systems.utility import utility_functions
 
 prompts = Prompts()
 ut = utility_functions()

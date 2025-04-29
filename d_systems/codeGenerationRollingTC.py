@@ -3,7 +3,7 @@ from dotenv import load_dotenv
 from langchain.schema import AIMessage
 from prompts.TC_prompts import Prompts
 
-from agenticSystemPaper.AgenticFramework.d_systems.utility import utility_functions
+from AgenticFramework.d_systems.utility import utility_functions
 load_dotenv()
 prompts = Prompts()
 
