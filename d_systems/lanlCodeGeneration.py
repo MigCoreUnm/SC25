@@ -126,7 +126,8 @@ def vector_search(query: str, collection_name: str):
     Performs a vector search against a ChromaDB (or other DB) instance.
     Returns up to 25 results.
     """
-    db_path =  "/vast/home/miguelcord/agenticSystemPaper/chroma_db"
+    db_path =  os.getenv("CHROMA_PATH")
+    collection_name = os.getenv("COLLECTION")
     db = chromadbConnector(path=db_path, collection=collection_name)
     results = db.perform_vector_search(query=query, n_results=10)
 

@@ -89,14 +89,14 @@ def retrieve_file(file_info: str):
 
 
 
-def breakdown_system_lanl(question, model="Meta-Llama-3.1-70B-Instruct", temperature=0.1,collection="pyDRESCALk"):
+def breakdown_system_lanl(question, model="Meta-Llama-3.3-70B-Instruct", temperature=0.1,collection="pyDRESCALk"):
     system = AgenticSystem()
     system.add_to_memory("parsed_outputs")
 
         # VECTOR SEARCH
     system.add_function_node(
         name="vector_search",
-        function=lambda step: vector_search(step, collection),
+        function=lambda step: vector_search(step, os.getenv("COLLECTION")),
         input_params=["question"],
         is_end_node=False
     )
@@ -119,8 +119,9 @@ def breakdown_system_lanl(question, model="Meta-Llama-3.1-70B-Instruct", tempera
         Performs a vector search against a ChromaDB (or other DB) instance.
         Returns up to 25 results.
         """
-        db_path =  "/vast/home/miguelcord/agenticSystemPaper/chroma_db"
-        db = chromadbConnector(path=db_path, collection=collection_name)
+        collection = os.getenv("COLLECTION")
+        db_path =  os.getenv("CHROMA_PATH")
+        db = chromadbConnector(path=db_path, collection=collection)
         results = db.perform_vector_search(query=query, n_results=2)
 
         # Extract top docs & metadata

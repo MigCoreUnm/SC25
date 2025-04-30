@@ -1,6 +1,8 @@
 import chromadb
 from sentence_transformers import SentenceTransformer
-
+from dotenv import load_dotenv
+import os
+load_dotenv()
 """
 The point of this file is to create a simple db Connection class for the chroma DB we are using
 """
@@ -10,7 +12,7 @@ class chromadbConnector():
     def __init__(self, path, collection):
         self.client = chromadb.PersistentClient(path=path)
         self.collection = self.get_collection(collection)
-        self.embedding_model =  SentenceTransformer(model_name_or_path="Alibaba-NLP/gte-large-en-v1.5", trust_remote_code=True)
+        self.embedding_model =  SentenceTransformer(model_name_or_path=os.environ("EMBED_MODEL"), trust_remote_code=True)
 
 
     def get_collection(self,name):

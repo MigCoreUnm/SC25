@@ -11,7 +11,7 @@ breaking_into_steps = prompts.get_break_into_steps()
 combine_steps = prompts.get_combine_steps()
 utility = utility_functions()
 
-def breakdown_system(question, model="Meta-Llama-3.1-70B-Instruct", temperature=0.1):
+def breakdown_system(question, model="Meta-Llama-3.3-70B-Instruct", temperature=0.1):
     system = AgenticSystem()
     system.add_to_memory("parsed_outputs")
     

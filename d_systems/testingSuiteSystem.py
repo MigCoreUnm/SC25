@@ -16,7 +16,7 @@ unit_testing_step = prompts.get_unit_testing_step()
 create_ranking = prompts.get_create_ranking()
 node2_test_execution_instructions = prompts.get_test_execution_instructions()
 
-def run_unit_tests_and_analysis(code, purpose, model="Meta-Llama-3.1-70B-Instruct", temperature=0.1):
+def run_unit_tests_and_analysis(code, purpose, model="Meta-Llama-3.3-70B-Instruct", temperature=0.1):
     system2 = AgenticSystem()
 
     # --- SETUP MEMORY ---

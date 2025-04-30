@@ -2,7 +2,9 @@ import re
 from langchain.schema import AIMessage
 from AgenticFramework.AgenticSystem import Node
 from dbConnector import chromadbConnector
-
+from dotenv import load_dotenv
+import os
+load_dotenv()
 from prompts import Prompts
 prompt = Prompts()
 class utility_functions():
@@ -68,7 +70,7 @@ class utility_functions():
         Performs a vector search against a ChromaDB (or other DB) instance.
         Returns top-n results (set to 5 here).
         """
-        db = chromadbConnector(path="./chroma_db", collection="AdversarialTensors")
+        db = chromadbConnector(path=os.environ("CHROMA_PATH"), collection=os.environ("COLLECTION"))
         results = db.perform_vector_search(query=query, n_results=3)
         docs = results.get("documents")[0][0:5]
         metadata = results.get('metadatas')[0][0:5]
